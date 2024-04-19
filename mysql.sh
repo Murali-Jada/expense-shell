@@ -7,7 +7,9 @@ LOGFILE=/tmp/$SCRIPT_NAME-$TIMESTAMP.log
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[0m"
+N="\e[0m" 
+echo "please enter DB password:"
+read -s mysql_root_password
 
 VALIDATE(){
     if [ $1 -ne 0 ]
@@ -41,11 +43,12 @@ VALIDATE $? "starting MYSQL server"
 
 #Below code useful for idempotent nature
 
- mysql -h db.daws78.online  -uroot -pExpenseApp@1 -e 'show databases;' &>>$LOGFILE 
+ mysql -h db.daws78.online  -uroot -p${mysql_root_password} -e 'show databases;' &>>$LOGFILE 
  if [ $? -ne 0 ]
  then 
-     echo "mysql_secure_installation --set-root-pass ExpenseApp@1"
-     VALIDATE $? "MYSQL root pasword setup"
+     mysql_secure_installation --set-root-pass ${mysql_root_password} &>>$LOGFILE
+     VALIDATE $? "MYSQL root password setup" 
+     
  else 
      echo -e "MYSQL Root password already setup...$Y SKIPPING $N"  
  fi       
