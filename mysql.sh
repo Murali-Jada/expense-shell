@@ -52,3 +52,4 @@ VALIDATE $? "starting MYSQL server"
  else 
      echo -e "MYSQL Root password already setup...$Y SKIPPING $N"  
  fi       
+ 
