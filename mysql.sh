@@ -42,14 +42,12 @@ VALIDATE $? "starting MYSQL server"
 # VALIDATE $? "setting up root password" 
 
 #Below code useful for idempotent nature
+mysql -h db.daws.online -root -pExpenseApp@1 -e 'show databases;' &>>$LOGFILE 
+if [ $? -ne 0 ]
+then 
+    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
+    VALIDATE $? "MYSQL Root password setup"
+else 
+    echo -e "MYSQL root password is already setup...$Y SKIPPING $N"
+fi 
 
- mysql -h db.daws78.online  -uroot -p${mysql_root_password} -e 'SHOW DATABASES;' &>>$LOGFILE 
- if [ $? -ne 0 ]
- then 
-     mysql_secure_installation --set-root-pass ${mysql_root_password} &>>$LOGFILE
-     VALIDATE $? "MYSQL root password setup" 
-     
- else 
-     echo -e "MYSQL Root password already setup...$Y SKIPPING $N"  
- fi       
- 
